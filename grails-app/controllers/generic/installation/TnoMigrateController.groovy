@@ -99,6 +99,12 @@ class TnoMigrateController {
                 if (!event) {
                     event = new Event( name: eventName, parent: study, template: Template.read( oldEvent.template_id ) )
                     study.addToEvents( event )
+
+                    event.giveFields().each() {
+                        if ( !it.name.equalsIgnoreCase('name') ) {
+                            event.setFieldValue(it.name, Event.findById(oldEvent.id).getFieldValue(it.name))
+                        }
+                    }
                     event.save( flush: true, failOnError: true )
 
                     newEventIdList << event.id
@@ -147,8 +153,10 @@ class TnoMigrateController {
                                 def sampleTemplate = Template.read( oldSamplingEvent.sample_template_id )
                                 samplingEvent = new SamplingEvent( name: samplingEventName, parent: study, template: template, sampleTemplate: sampleTemplate )
                                 study.addToSamplingEvents( samplingEvent )
-                                samplingEvent.getRequiredFields().each() {
-                                    samplingEvent.setFieldValue(it.name, SamplingEvent.findById(oldSamplingEvent.id).getFieldValue(it.name))
+                                samplingEvent.giveFields().each() {
+                                    if ( !it.name.equalsIgnoreCase('name') ) {
+                                        samplingEvent.setFieldValue(it.name, SamplingEvent.findById(oldSamplingEvent.id).getFieldValue(it.name))
+                                    }
                                 }
                                 samplingEvent.save( flush: true )
 
