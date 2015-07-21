@@ -62,7 +62,6 @@ class TnoMigrateController {
             oldEvents.each() { oldEvent ->
                 oldEventIdList << oldEvent.id
 
-                def eventName = sql.rows("SELECT template_string_fields_elt FROM event_template_string_fields WHERE event_id = ${oldEvent.id} AND template_string_fields_idx ='Event name (STRING)'").template_string_fields_elt[0]
                 def migration = sql.rows("SELECT template_string_fields_elt FROM event_template_string_fields WHERE event_id = ${oldEvent.id} AND template_string_fields_idx ='Migration'").template_string_fields_elt[0]
 
                 if (migration.split(';').size() != 1) {
@@ -71,10 +70,15 @@ class TnoMigrateController {
                     return
                 }
 
-                if (!eventName.equalsIgnoreCase(migration)) {
-                    println "EventName field (${eventName}) not matching migration field (${migration}). Using ${migration}"
-                    eventName = migration.trim()
-                }
+
+//              def eventName = sql.rows("SELECT template_string_fields_elt FROM event_template_string_fields WHERE event_id = ${oldEvent.id} AND template_string_fields_idx ='Event name (STRING)'").template_string_fields_elt[0]
+
+//                if (!eventName.equalsIgnoreCase(migration)) {
+//                    println "EventName field (${eventName}) not matching migration field (${migration}). Using ${migration}"
+//                    eventName = migration.trim()
+//                }
+
+                def eventName = migration.trim()
 
                 if ( subjectGroupEventGroups.contains(eventName )) {
                     subjectGroupEventGroups << eventName
@@ -148,17 +152,57 @@ class TnoMigrateController {
                             //Set template name as samplingEvent name
                             def samplingEventName = template.name
 
+                            switch (samplingEventName) {
+                                case 'Body fluid':
+                                    def addToSamplingEventName = sql.rows("SELECT tfli.templatefieldlistitemname FROM sampling_event_template_string_list_fields setslf, template_field_list_item tfli WHERE sampling_event_template_string_list_fields_id = ${oldSamplingEvent.id} AND tfli.id = setslf.template_field_list_item_id AND setslf.template_string_list_fields_idx = 'Sample fraction';").templatefieldlistitemname[0]
+                                    samplingEventName = samplingEventName + ' ' + addToSamplingEventName
+                                    break
+                                case 'Tissue':
+                                    def addToSamplingEventName = sql.rows("SELECT setslf.template_string_list_fields_idx, tfli.templatefieldlistitemname FROM sampling_event_template_string_list_fields setslf, template_field_list_item tfli WHERE sampling_event_template_string_list_fields_id = ${oldSamplingEvent.id} AND tfli.id = setslf.template_field_list_item_id AND setslf.template_string_list_fields_idx = 'Tissue';").templatefieldlistitemname[0]
+                                    template = Template.findByName('Organ/tissue')
+                                    samplingEventName = samplingEventName + ' ' + addToSamplingEventName
+                                    break
+                                case 'Questionnaire':
+                                    break
+                                case 'Excretion':
+                                    def addToSamplingEventName = sql.rows("SELECT setslf.template_string_list_fields_idx, tfli.templatefieldlistitemname FROM sampling_event_template_string_list_fields setslf, template_field_list_item tfli WHERE sampling_event_template_string_list_fields_id = ${oldSamplingEvent.id} AND tfli.id = setslf.template_field_list_item_id AND setslf.template_string_list_fields_idx = 'Excretion';").templatefieldlistitemname[0]
+                                    samplingEventName = samplingEventName + ' ' + addToSamplingEventName
+                                    break
+                                case 'Physiology':
+                                    break
+                                case 'Organ/tissue':
+                                    def addToSamplingEventName = sql.rows("SELECT setslf.template_string_list_fields_idx, tfli.templatefieldlistitemname FROM sampling_event_template_string_list_fields setslf, template_field_list_item tfli WHERE sampling_event_template_string_list_fields_id = ${oldSamplingEvent.id} AND tfli.id = setslf.template_field_list_item_id AND setslf.template_string_list_fields_idx = 'Tissue';").templatefieldlistitemname[0]
+                                    samplingEventName = samplingEventName + ' ' + addToSamplingEventName
+                                    break
+                                default:
+                                    println "ERROR!"
+                            }
+
                             def samplingEvent = SamplingEvent.findByParentAndName(study, samplingEventName)
+
                             if (!samplingEvent) {
                                 def sampleTemplate = Template.read( oldSamplingEvent.sample_template_id )
+
                                 samplingEvent = new SamplingEvent( name: samplingEventName, parent: study, template: template, sampleTemplate: sampleTemplate )
+
                                 study.addToSamplingEvents( samplingEvent )
+
+                                def oldSamplingEventDM = SamplingEvent.findById(oldSamplingEvent.id)
+                                def oldSamplingEventFields = oldSamplingEventDM.giveFields()
+
                                 samplingEvent.giveFields().each() {
-                                    if ( !it.name.equalsIgnoreCase('name') ) {
-                                        samplingEvent.setFieldValue(it.name, SamplingEvent.findById(oldSamplingEvent.id).getFieldValue(it.name))
+                                    if ( !['sampling name short', 'sampling-type', 'migration', 'related event/chall.', 'relative time in related event', 'name', 'sampletemplate'].contains(it.name.toLowerCase()) ) {
+
+                                        def value = "not defined"
+
+                                        if (oldSamplingEventFields.contains(it.name)) {
+                                            value = oldSamplingEventDM?.getFieldValue(it.name)
+                                        }
+
+                                        samplingEvent.setFieldValue(it.name, value)
                                     }
                                 }
-                                samplingEvent.save( flush: true )
+                                samplingEvent.save( flush: true, failOnError: true )
 
                                 newSamplingEventIdList << samplingEvent.id
                             }
