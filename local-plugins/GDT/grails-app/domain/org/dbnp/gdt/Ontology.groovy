@@ -53,6 +53,7 @@ class Ontology implements Serializable {
      * @return Ontology
      */
     static Ontology getOrCreateOntology( String ontologyUrl) {
+
         def ontology = findByUrl( ontologyUrl )
 
         // got an ontology?
@@ -60,9 +61,11 @@ class Ontology implements Serializable {
             // no, fetch it from the webservice
             ontology = getBioOntology( ontologyUrl )
 
-            if (ontology && ontology.validate() && ontology.save(flush:true)) {
+            if (ontology && ontology.validate() ) {
                 ontology.refresh()
             }
+
+            ontology.save(flush:true, failOnError: true)
         }
 
         return ontology

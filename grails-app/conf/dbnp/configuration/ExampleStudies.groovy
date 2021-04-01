@@ -29,18 +29,18 @@ class ExampleStudies {
 		url = url.split('/').size() > 1 ? url.split('/')[1..-1].join('/') : ''
 
         // Look up the used ontologies which should be in the database by now
-		def speciesOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCBITAXON")
-		def brendaOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/BTO")
-		def nciOntology					= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCIT")
-		def chebiOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/CHEBI")
-		def mouseTerm = Term.getOrCreateTerm('Mus musculus',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_10090")
-		def humanTerm = Term.getOrCreateTerm('Homo sapiens',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_9606")
-		def arabTerm = Term.getOrCreateTerm('Arabidopsis thaliana',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_3702")
-		def tomatoTerm = Term.getOrCreateTerm('Solanum lycopersicum',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_4081")
-		def potatoTerm = Term.getOrCreateTerm('Solanum tuberosum',speciesOntology, "http://purl.obolibrary.org/obo/NCBITaxon_4113")
-		def bloodTerm = Term.getOrCreateTerm('blood plasma',brendaOntology,"http://purl.obolibrary.org/obo/BTO_0000131")
-		def c57bl6Term = Term.getOrCreateTerm('C57BL/6 Mouse',nciOntology,"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C14424")
-		def glucoseTerm = Term.getOrCreateTerm('glucose',chebiOntology,"http://purl.obolibrary.org/obo/CHEBI_17234")
+		def speciesOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCBITAXON")
+		def brendaOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/BTO")
+		def nciOntology					= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCIT")
+		def chebiOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/CHEBI")
+		def mouseTerm = Term.getOrCreateTerm('Mus musculus',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_10090")
+		def humanTerm = Term.getOrCreateTerm('Homo sapiens',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_9606")
+		def arabTerm = Term.getOrCreateTerm('Arabidopsis thaliana',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_3702")
+		def tomatoTerm = Term.getOrCreateTerm('Solanum lycopersicum',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_4081")
+		def potatoTerm = Term.getOrCreateTerm('Solanum tuberosum',speciesOntology, "https://purl.obolibrary.org/obo/NCBITaxon_4113")
+		def bloodTerm = Term.getOrCreateTerm('blood plasma',brendaOntology,"https://purl.obolibrary.org/obo/BTO_0000131")
+		def c57bl6Term = Term.getOrCreateTerm('C57BL/6 Mouse',nciOntology,"https://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C14424")
+		def glucoseTerm = Term.getOrCreateTerm('glucose',chebiOntology,"https://purl.obolibrary.org/obo/CHEBI_17234")
 
 		// Add SAM assay reference
 		def clinicalModule = new AssayModule(
@@ -77,10 +77,10 @@ class ExampleStudies {
 		def config =  Holders.config
 
 		// Look up the used ontologies which should be in the database by now
-        def speciesOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCBITAXON")
-        def brendaOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/BTO")
-        def nciOntology					= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCIT")
-        def chebiOntology				= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/CHEBI")
+        def speciesOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCBITAXON")
+        def brendaOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/BTO")
+        def nciOntology					= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCIT")
+        def chebiOntology				= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/CHEBI")
 
 		// Look up the used templates which should also be in the database by now
 		def studyTemplate				= Template.findByName("NMC Study")
@@ -98,14 +98,14 @@ class ExampleStudies {
 		def seqAssayTemplate            = Template.findByName("Mass Sequencing assay")
 
 		// Add terms manually, to avoid having to do many HTTP requests to the BioPortal website
-        def mouseTerm = Term.getOrCreateTerm('Mus musculus',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_10090")
-        def humanTerm = Term.getOrCreateTerm('Homo sapiens',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_9606")
-        def arabTerm = Term.getOrCreateTerm('Arabidopsis thaliana',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_3702")
-        def tomatoTerm = Term.getOrCreateTerm('Solanum lycopersicum',speciesOntology,"http://purl.obolibrary.org/obo/NCBITaxon_4081")
-        def potatoTerm = Term.getOrCreateTerm('Solanum tuberosum',speciesOntology, "http://purl.obolibrary.org/obo/NCBITaxon_4113")
-        def bloodTerm = Term.getOrCreateTerm('blood plasma',brendaOntology,"http://purl.obolibrary.org/obo/BTO_0000131")
-        def c57bl6Term = Term.getOrCreateTerm('C57BL/6 Mouse',nciOntology,"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C14424")
-        def glucoseTerm = Term.getOrCreateTerm('glucose',chebiOntology,"http://purl.obolibrary.org/obo/CHEBI_17234")
+        def mouseTerm = Term.getOrCreateTerm('Mus musculus',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_10090")
+        def humanTerm = Term.getOrCreateTerm('Homo sapiens',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_9606")
+        def arabTerm = Term.getOrCreateTerm('Arabidopsis thaliana',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_3702")
+        def tomatoTerm = Term.getOrCreateTerm('Solanum lycopersicum',speciesOntology,"https://purl.obolibrary.org/obo/NCBITaxon_4081")
+        def potatoTerm = Term.getOrCreateTerm('Solanum tuberosum',speciesOntology, "https://purl.obolibrary.org/obo/NCBITaxon_4113")
+        def bloodTerm = Term.getOrCreateTerm('blood plasma',brendaOntology,"https://purl.obolibrary.org/obo/BTO_0000131")
+        def c57bl6Term = Term.getOrCreateTerm('C57BL/6 Mouse',nciOntology,"https://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C14424")
+        def glucoseTerm = Term.getOrCreateTerm('glucose',chebiOntology,"https://purl.obolibrary.org/obo/CHEBI_17234")
 
 		// Create a few persons, roles and Affiliations
 		def affiliation1 = new PersonAffiliation(

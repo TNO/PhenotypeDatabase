@@ -31,7 +31,7 @@ class ExampleTemplates {
 			// add Species ontology which is used for a.o. the Subject domain field 'species'
 			def speciesOntology = new Ontology(
 				name: 'NCBI organismal classification',
-				url: 'http://data.bioontology.org/ontologies/NCBITAXON',
+				url: 'https://data.bioontology.org/ontologies/NCBITAXON',
                 acronym: 'NCBITAXON',
 				versionNumber: '1.2'
 			).save(failOnError:true)
@@ -39,7 +39,7 @@ class ExampleTemplates {
 			// add Sample>material ontology
 			def brendaOntology = new Ontology(
 				name: 'BRENDA tissue / enzyme source',
-                    url: 'http://data.bioontology.org/ontologies/BTO',
+                    url: 'https://data.bioontology.org/ontologies/BTO',
                 acronym: 'BTO',
 				versionNumber: '1.3'
 			).save(failOnError:true)
@@ -47,7 +47,7 @@ class ExampleTemplates {
 			// add NCI ontology which is used in Mouse genotype template field
 			def nciOntology = new Ontology(
 				name: 'NCI Thesaurus',
-				url: 'http://data.bioontology.org/ontologies/NCIT',
+				url: 'https://data.bioontology.org/ontologies/NCIT',
                 acronym: 'NCIT',
 				versionNumber: '10.03'
 			).save(failOnError:true)
@@ -55,7 +55,7 @@ class ExampleTemplates {
 			// add CHEBI ontology which is used for describing chemicals in e.g. events
 			def chebiOntology = new Ontology(
 				name: 'Chemical entities of biological interest',
-				url: 'http://data.bioontology.org/ontologies/CHEBI',
+				url: 'https://data.bioontology.org/ontologies/CHEBI',
                 acronym: 'CHEBI',
 				versionNumber: '1.73'
 			).save(failOnError:true, flush:true)
@@ -64,10 +64,10 @@ class ExampleTemplates {
 		// otherwise, this may be a production demo instance, so initialize the ontologies dynamically from BioPortal
 		else {
 
-            def speciesOntology		= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCBITAXON")
-            def brendaOntology		= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/BTO")
-            def nciOntology			= Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCIT")
-            def chebiOntology       = Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/CHEBI")
+            def speciesOntology		= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCBITAXON")
+            def brendaOntology		= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/BTO")
+            def nciOntology			= Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCIT")
+            def chebiOntology       = Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/CHEBI")
 		}
 	}
 
@@ -126,7 +126,7 @@ class ExampleTemplates {
 		def mouseTemplate = new Template(
 			name: 'Mouse', entity: dbnp.studycapturing.Subject)
 		.addToFields(new TemplateField(
-			name: 'Strain', type: TemplateFieldType.ONTOLOGYTERM, ontologies: [Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCIT")], entity: Subject, comment: "This is an ontology term, if the right strain is not in the list please add it with 'add more'"))
+			name: 'Strain', type: TemplateFieldType.ONTOLOGYTERM, ontologies: [Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCIT")], entity: Subject, comment: "This is an ontology term, if the right strain is not in the list please add it with 'add more'"))
 		.addToFields(genotypeField)
 		.addToFields(genotypeTypeField)
 		.addToFields(genderField)
@@ -469,7 +469,7 @@ class ExampleTemplates {
 				name: 'Compound',
 				type: TemplateFieldType.ONTOLOGYTERM,
 				entity: Event,
-				ontologies: [Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/CHEBI")]
+				ontologies: [Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/CHEBI")]
 			)
 		)
 		.addToFields(

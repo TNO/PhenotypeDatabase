@@ -88,12 +88,13 @@ class BootStrap {
 		 */
 
 		try {
+
 			def species = TemplateEntity.getField(Subject.domainFields, 'species')
 
 			if ( species ) {
 
-				def ncbi = Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/NCBITAXON")
-				def envo = Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/ENVO")
+				def ncbi = Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/NCBITAXON")
+				def envo = Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/ENVO")
 
 				if ( !species.ontologies || !species.ontologies?.contains(ncbi) || species.ontologies?.contains(envo) ) {
 					species.ontologies = [ ncbi, envo ]
@@ -104,7 +105,7 @@ class BootStrap {
 			def material = TemplateEntity.getField(Sample.domainFields, 'material')
 
 			if ( material ) {
-				def bto = Ontology.getOrCreateOntology("http://data.bioontology.org/ontologies/BTO")
+				def bto = Ontology.getOrCreateOntology("https://data.bioontology.org/ontologies/BTO")
 
 				if ( !species.ontologies || !species.ontologies?.contains(bto) ) {
 					material.ontologies = [ bto ]
@@ -116,7 +117,6 @@ class BootStrap {
 			log.error("Could not add species and material ontologies: unable to connect to Bioportal, please check your connection and bioontology.apikey (in external config): ${e.message}")
 		}
 
-		
 		// Preventing SSL Handshake exception for HTTPS connections java 1.7 
 		// See http://stackoverflow.com/questions/7615645/ssl-handshake-alert-unrecognized-name-error-since-upgrade-to-java-1-7-0
 		System.setProperty "jsse.enableSNIExtension", "false";
